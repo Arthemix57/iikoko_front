@@ -3,6 +3,7 @@ import './style.css'
 import App from './App.vue'
 import { createPinia } from 'pinia';
 import {  userStore } from './store/UserStore.js';
+import {  CaisseStore } from './store/CaisseStore.js';
 import VueAxios from 'vue-axios';
 import axios from 'axios';
 import router from './assets/router/router.js';
@@ -10,5 +11,7 @@ import router from './assets/router/router.js';
 const app = createApp(App);
 app.use(createPinia());
 
-app.config.globalProperties.$store = userStore();
+app.config.globalProperties.$userStore = userStore();
+app.config.globalProperties.$CaisseStore = CaisseStore();
+
 app.use(router).use(VueAxios, axios).mount('#app')

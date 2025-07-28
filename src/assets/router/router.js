@@ -1,15 +1,67 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import Login from  '../../components/Login.vue'
-import HelloWorld from '../../components/HelloWorld.vue'
+import { createRouter, createWebHistory } from "vue-router";
+import HomeComponent from "../../components/HomeComponent.vue";
+import NavBarComponent from "../../components/caisse/NavBarComponent.vue";
+import AllProductComponent from "../../components/caisse/AllProductComponent.vue";
+import OpenCloseCaisseComponent from "../../components/caisse/OpenCloseCaisseComponent.vue";
+import ProductListComponent from "../../components/products/ProductListComponent.vue";
 
 const routes = [
-  { path: '/', name: 'Home', component: HelloWorld },
-  { path: '/login', name: 'Login', component: Login },
-]
+  {
+    path: "/",
+    name: "Home",
+    component: HomeComponent,
+  },
+  {
+    path: "/Acceuil",
+    component: NavBarComponent,
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: "",
+        components: {
+          default: NavBarComponent,
+          one: AllProductComponent,
+        },
+      },
+      {
+        path: "/caisse",
+        components: {
+          default: NavBarComponent,
+          one: OpenCloseCaisseComponent,
+        },
+      },
+            {
+        path: "/Produits",
+        components: {
+          default: NavBarComponent,
+          one: ProductListComponent,
+        },
+      },
+    ],
+  },
+];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
-})
+});
 
-export default router
+router.beforeEach((to, from, next) => {
+  const jwtToken = localStorage.getItem("jwtToken");
+
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (!jwtToken) {
+      next({ name: "Home" });
+    } else {
+      next();
+    }
+  } else {
+    if (to.name === "Home" && jwtToken) {
+      next({ path: "/Acceuil" });
+    } else {
+      next();
+    }
+  }
+});
+
+export default router;
