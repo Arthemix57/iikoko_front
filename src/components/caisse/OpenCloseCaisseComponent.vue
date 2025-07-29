@@ -52,20 +52,30 @@ export default {
             openedAt: null,
         };
     },
-    methods: {
-        async checkCaisseStatus() {
-            try {
-                const res = await this.axios.get(`${this.api}Status`, {
-                    headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}` },
-                });
-                if (res.data.status === 'ouverte') {
-                    this.isOpen = true;
-                    this.openedAt = res.data.caisse.ouverture;
-                    this.fondInitial = res.data.caisse.fond_initial;
-                }
-            } catch (error) {
-                console.error('Erreur statut caisse', error);
-            }
+    methods:{ 
+         checkCaisseStatus() {
+
+            this.axios
+                .get(`${this.api}Status`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('jwtToken')}`
+                    }
+                })
+                .then(({ data }) => {
+                    if (data.status === 'ouverte') {
+                        this.openedAt = data.caisse.ouverture;
+                        this.fondInitial = data.caisse.fond_initial;
+                    }
+                    console.log('Statut caisse récupéré :', data);
+                })
+                .catch((error) => {
+                    console.error('Erreur statut caisse :', error);
+                    this.alert = {
+                        type: 'error',
+                        message: error.response?.data?.message || 'Impossible de vérifier le statut de la caisse',
+                    };
+                })
+
         },
         async ouvrirCaisse() {
             if (this.fondInitial === '' || parseFloat(this.fondInitial) < 0) {

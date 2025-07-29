@@ -63,8 +63,8 @@ export default {
                 this.$userStore.setUser(data.user);
             })
             .catch(error => {
-                this.alert.type = "error";
-                this.alert.message = error.response.data?.message;
+                localStorage.clear()
+                this.$router.push('/');
             })
             .finally(() => {
                 this.loading = false;

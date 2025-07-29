@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeComponent from "../../components/HomeComponent.vue";
 import NavBarComponent from "../../components/caisse/NavBarComponent.vue";
-import AllProductComponent from "../../components/caisse/AllProductComponent.vue";
+import OnboardComponent from "../../components/caisse/OnboardComponent.vue";
 import OpenCloseCaisseComponent from "../../components/caisse/OpenCloseCaisseComponent.vue";
 import ProductListComponent from "../../components/products/ProductListComponent.vue";
 
@@ -12,6 +12,11 @@ const routes = [
     component: HomeComponent,
   },
   {
+    path: "/caisse",
+    components: OpenCloseCaisseComponent,
+    meta: { requiresAuth: true },
+  },
+  {
     path: "/Acceuil",
     component: NavBarComponent,
     meta: { requiresAuth: true },
@@ -20,14 +25,7 @@ const routes = [
         path: "",
         components: {
           default: NavBarComponent,
-          one: AllProductComponent,
-        },
-      },
-      {
-        path: "/caisse",
-        components: {
-          default: NavBarComponent,
-          one: OpenCloseCaisseComponent,
+          one: OnboardComponent,
         },
       },
             {
